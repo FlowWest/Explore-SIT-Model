@@ -30,6 +30,14 @@ inv.logit <- function(eta) {
 #' high.pred = c(0, 0, 0, 1, 0), no.con.pts = rep(10, 5), prop.div = rep(0, 5), 
 #' tot.div = rep(0, 5), strand = c(0, 0, 0, 0, 1))
 
+# maxT25 = 0
+# aveT20 = 0
+# high.pred = .33
+# no.con.pts = 197
+# prop.div = .1
+# tot.div = 200
+# strand = .16
+
 Juv.IC.S <- function(maxT25, aveT20, high.pred, no.con.pts, prop.div, tot.div, strand) {
   
   B0 <- -0.75
@@ -47,6 +55,8 @@ Juv.IC.S <- function(maxT25, aveT20, high.pred, no.con.pts, prop.div, tot.div, s
                    -0.0021 * tot.div * 0.215) * (1 - maxT25) + maxT25 * 0.1  
   t(rbind(s, m, l, 1))
 }
+
+# a <- Juv.IC.S(maxT25, aveT20, high.pred, no.con.pts, prop.div, tot.div, strand)
 
 
 # refactored --------------------------------------------------------------------
