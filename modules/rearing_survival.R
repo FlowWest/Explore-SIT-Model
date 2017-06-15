@@ -5,6 +5,8 @@ rearing_survivalUI <- function(id) {
     fluidRow(
       column(width = 9,
              tags$h3('Sub-Model Inputs'),
+             radioButtons(ns('hab'), label = 'Habitat',
+                          choices = c('In-Channel', 'Floodplain'), selected = 'In-Channel'),
              uiOutput(ns('cont')),
              uiOutput(ns('pred')),
              uiOutput(ns('strand')),
@@ -16,9 +18,18 @@ rearing_survivalUI <- function(id) {
                           selected = 0)),
       column(width = 3,
              tags$h3('Percent Survival'),
-             textOutput(ns('surv_sm')),
-             textOutput(ns('surv_md')),
-             textOutput(ns('surv_lg')))
+             tags$div(
+               tags$h4('Small'),
+               textOutput(ns('surv_sm'))
+             ),
+             tags$div(
+               tags$h4('Medium'),
+               textOutput(ns('surv_md'))
+             ),
+             tags$div(
+               tags$h4('Large'),
+               textOutput(ns('surv_lg'))
+             ))
     )
   )
   
@@ -43,11 +54,11 @@ rearing_survival <- function(input, output, session, shed) {
       maxT25 <- 1
       aveT20 <- 1
     }
-
+    
     return(list(T25 = maxT25, T20 = aveT20))
-
+    
   })
-
+  
   
   output$cont <- renderUI({
     numericInput(ns('contact'), 'Number of Contact Points', min = 0, value = this_misc()$contact)
@@ -63,13 +74,25 @@ rearing_survival <- function(input, output, session, shed) {
   
   
   surv <- reactive({
-    surv <- Juv.IC.S(maxT25 = temps()$T25,
-             aveT20 = temps()$T20,
-             high.pred = input$high_pred,
-             no.con.pts = input$contact,
-             prop.div = input$prop_div,
-             tot.div = input$tot_div,
-             strand = input$prop_strand) * 100
+    
+    if (input$hab == 'In-Channel') {
+      surv <- Juv.IC.S(maxT25 = temps()$T25,
+                       aveT20 = temps()$T20,
+                       high.pred = input$high_pred,
+                       no.con.pts = input$contact,
+                       prop.div = input$prop_div,
+                       tot.div = input$tot_div,
+                       strand = input$prop_strand) * 100
+    } else {
+      surv <- Juv.FP.S(maxT25 = temps()$T25,
+                       aveT20 = temps()$T20,
+                       high.pred = input$high_pred,
+                       no.con.pts = input$contact,
+                       prop.div = input$prop_div,
+                       tot.div = input$tot_div,
+                       strand = input$prop_strand,
+                       wks.fld = 2) * 100
+    }
     
     paste(round(surv, 2), '%')
     
