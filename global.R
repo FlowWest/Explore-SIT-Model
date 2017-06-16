@@ -6,7 +6,9 @@ library(forcats)
 source('modules/watershed.R')
 source('modules/rearing_survival.R')
 source('modules/spawning.R')
+source('modules/sources.R')
 source('R/juv_survival.R')
+
 
 misc_inputs <- readr::read_rds('data/misc.rds')
 
