@@ -20,9 +20,13 @@ rearing_survivalUI <- function(id) {
              tags$h3('Context'),
              tabsetPanel(
                tabPanel('Total Diversions',
-                        plotlyOutput(ns('div'))),
+                        plotlyOutput(ns('div')),
+                        tags$p('1970-1989 Cal Lite Simulated flows')),
                tabPanel('Proportion Diversion',
-                        plotlyOutput(ns('p_div')))
+                        plotlyOutput(ns('p_div')),
+                        tags$p('1970-1989 Cal Lite Simulated flows')),
+               tabPanel('Contact Points',
+                        withSpinner(leafletOutput(ns('contact_map'), height = 600), color = '#666666', type = 8))
              )),
       column(width = 3,
              tags$h3('Percent Survival'),
@@ -57,6 +61,10 @@ rearing_survival <- function(input, output, session, shed) {
   })
   
   output$div <- renderPlotly({
+    validate(
+      need(shed() %in% shed_with_div, 'No diversions on this watershed.')
+    )
+    
     month() %>% 
       dplyr::select(year, month, diversion) %>% 
       plot_ly(x = ~forcats::fct_inorder(month.abb[month]), y = ~diversion, type = 'scatter', mode = 'markers') %>% 
@@ -66,6 +74,10 @@ rearing_survival <- function(input, output, session, shed) {
   })
   
   output$p_div <- renderPlotly({
+    validate(
+      need(shed() %in% shed_with_div, 'No diversions on this watershed.')
+    )
+    
     month() %>% 
       dplyr::select(year, month, diversion, flow) %>% 
       dplyr::mutate(p_div = diversion / (diversion + flow)) %>% 
@@ -75,6 +87,19 @@ rearing_survival <- function(input, output, session, shed) {
       config(displayModeBar = FALSE)
   })
   
+  output$contact_map <- renderLeaflet({
+    
+    pal <- colorFactor(palette = 'Paired', domain = contact_pts$WebLegend)
+    
+    leaflet() %>% 
+      addPolygons(data = CVPIAwatersheds, weight = 1, group = 'Watersheds', label = ~Moonshed) %>% 
+      addCircleMarkers(data = contact_pts, weight = 1, radius = 7, opacity = 1, fillOpacity = 0.75, 
+                       popup = ~paste(paste0("<b>", SiteType, "</b>"), SiteName, sep = "<br/>"), 
+                       label = ~WebLegend, color = ~pal(WebLegend)) %>%
+      addProviderTiles(providers$CartoDB.Positron, group = 'Grey Basemap') %>% 
+      addProviderTiles(providers$Esri.WorldImagery, group = 'Satelite Basemap') %>%
+      addLayersControl(baseGroups = c('Grey Basemap', 'Satelite Basemap'), overlayGroups = c('Watersheds')) 
+  })
   
   temps <- reactive({
     if (input$temp == 0) {

@@ -26,7 +26,8 @@ spawningUI <- function(id) {
              tags$div(
                tags$h4('Redd Size'),
                textOutput(ns('redd_sz'))
-             ))
+             ),
+             tags$a(href = 'https://flowwest.shinyapps.io/carrying-capacity-app/', target = '_blank', 'Carrying Capacity App'))
     )
   )
   
