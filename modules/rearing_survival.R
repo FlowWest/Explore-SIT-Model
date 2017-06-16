@@ -3,7 +3,7 @@ rearing_survivalUI <- function(id) {
   
   tagList(
     fluidRow(
-      column(width = 9,
+      column(width = 3,
              tags$h3('Sub-Model Inputs'),
              radioButtons(ns('hab'), label = 'Habitat',
                           choices = c('In-Channel', 'Floodplain'), selected = 'In-Channel'),
@@ -16,6 +16,14 @@ rearing_survivalUI <- function(id) {
                           choiceNames = c('Monthly Mean < 20°C', 'Montly Mean > 20°C', 'Montly Mean > 25°C'),
                           choiceValues = c(0 , 1, 2),
                           selected = 0)),
+      column(width = 6,
+             tags$h3('Context'),
+             tabsetPanel(
+               tabPanel('Total Diversions',
+                        plotlyOutput(ns('div'))),
+               tabPanel('Proportion Diversion',
+                        plotlyOutput(ns('p_div')))
+             )),
       column(width = 3,
              tags$h3('Percent Survival'),
              tags$div(
@@ -43,6 +51,31 @@ rearing_survival <- function(input, output, session, shed) {
     dplyr::filter(misc_inputs, Watershed == shed())
   })
   
+  month <- reactive({
+    monthly %>% 
+      dplyr::filter(watershed == shed(), year >= 1970, year < 1990, month < 9) 
+  })
+  
+  output$div <- renderPlotly({
+    month() %>% 
+      dplyr::select(year, month, diversion) %>% 
+      plot_ly(x = ~forcats::fct_inorder(month.abb[month]), y = ~diversion, type = 'scatter', mode = 'markers') %>% 
+      add_lines(y = ~fitted(loess(diversion ~ month))) %>% 
+      layout(xaxis = list(title = 'month')) %>% 
+      config(displayModeBar = FALSE)
+  })
+  
+  output$p_div <- renderPlotly({
+    month() %>% 
+      dplyr::select(year, month, diversion, flow) %>% 
+      dplyr::mutate(p_div = diversion / (diversion + flow)) %>% 
+      plot_ly(x = ~forcats::fct_inorder(month.abb[month]), y = ~p_div, type = 'scatter', mode = 'markers') %>% 
+      add_lines(y = ~fitted(loess(p_div ~ month))) %>% 
+      layout(xaxis = list(title = 'month'), yaxis = list(title = 'proportion diverted')) %>% 
+      config(displayModeBar = FALSE)
+  })
+  
+  
   temps <- reactive({
     if (input$temp == 0) {
       maxT25 <- 0
@@ -59,7 +92,6 @@ rearing_survival <- function(input, output, session, shed) {
     
   })
   
-  
   output$cont <- renderUI({
     numericInput(ns('contact'), 'Number of Contact Points', min = 0, value = this_misc()$contact)
   })
@@ -71,7 +103,6 @@ rearing_survival <- function(input, output, session, shed) {
   output$strand <- renderUI({
     numericInput(ns('prop_strand'), 'Proportion Stranded', min = 0, max = 1, value = this_misc()$P.strand.early, step = .05)
   })
-  
   
   surv <- reactive({
     

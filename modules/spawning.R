@@ -3,7 +3,6 @@ spawningUI <- function(id) {
   tagList(
     fluidRow(
       column(width = 12,
-             textOutput(ns('shed')),
              tags$div(
                tags$h4('Initial Natural Adults'),
                textOutput(ns('init_ad'))
@@ -38,8 +37,6 @@ spawning <- function(input, output, session, shed) {
   this_shed <- reactive({
     dplyr::filter(misc_inputs, Watershed == shed())
   })
-  
-  output$shed <- renderText(shed())
   
   output$init_ad <- renderText(this_shed()$init.adult)
   output$hatch <- renderText(this_shed()$hatch.alloc * qunif(0.5, 80000, 150000))
