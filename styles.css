@@ -1,0 +1,15 @@
+.shiny-text-output {
+  display: inline-block;
+  font-size: 20px;
+}
+
+h4 {
+  display: inline-block;
+}
+
+#context {
+  border-left: 1px solid #D7D7D7;
+  border-right: 1px solid #D7D7D7;
+  padding-left: 25px;
+  padding-right: 25px;
+}

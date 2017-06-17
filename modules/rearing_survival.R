@@ -3,10 +3,10 @@ rearing_survivalUI <- function(id) {
   
   tagList(
     fluidRow(
-      column(width = 3,
+      column(width = 2,
              tags$h3('Sub-Model Inputs'),
              radioButtons(ns('hab'), label = 'Habitat',
-                          choices = c('In-Channel', 'Floodplain'), selected = 'In-Channel'),
+                          choices = c('In-Channel', 'Floodplain'), selected = 'In-Channel', inline = TRUE),
              uiOutput(ns('cont')),
              uiOutput(ns('pred')),
              uiOutput(ns('strand')),
@@ -16,30 +16,31 @@ rearing_survivalUI <- function(id) {
                           choiceNames = c('Monthly Mean < 20°C', 'Montly Mean > 20°C', 'Montly Mean > 25°C'),
                           choiceValues = c(0 , 1, 2),
                           selected = 0)),
-      column(width = 6,
-             tags$h3('Context'),
-             tabsetPanel(
-               tabPanel('Total Diversions',
-                        plotlyOutput(ns('div')),
-                        tags$p('1970-1989 Cal Lite Simulated flows')),
-               tabPanel('Proportion Diversion',
-                        plotlyOutput(ns('p_div')),
-                        tags$p('1970-1989 Cal Lite Simulated flows')),
-               tabPanel('Contact Points',
-                        withSpinner(leafletOutput(ns('contact_map'), height = 600), color = '#666666', type = 8))
-             )),
-      column(width = 3,
+      column(width = 8, 
+             div(id = 'context',
+                 tags$h3('Context'),
+                 tabsetPanel(
+                   tabPanel('Total Diversions',
+                            plotlyOutput(ns('div')),
+                            tags$p('1970-1989 Cal Lite Simulated flows')),
+                   tabPanel('Proportion Diversion',
+                            plotlyOutput(ns('p_div')),
+                            tags$p('1970-1989 Cal Lite Simulated flows'))
+                   # tabPanel('Contact Points',
+                   #          withSpinner(leafletOutput(ns('contact_map'), height = 600), color = '#666666', type = 8))
+                 ))),
+      column(width = 2,
              tags$h3('Percent Survival'),
              tags$div(
-               tags$h4('Small'),
+               tags$h4('Small', style = 'width:100px;'),
                textOutput(ns('surv_sm'))
              ),
              tags$div(
-               tags$h4('Medium'),
+               tags$h4('Medium', style = 'width:100px;'),
                textOutput(ns('surv_md'))
              ),
              tags$div(
-               tags$h4('Large'),
+               tags$h4('Large', style = 'width:100px;'),
                textOutput(ns('surv_lg'))
              ))
     )
@@ -67,9 +68,12 @@ rearing_survival <- function(input, output, session, shed) {
     
     month() %>% 
       dplyr::select(year, month, diversion) %>% 
-      plot_ly(x = ~forcats::fct_inorder(month.abb[month]), y = ~diversion, type = 'scatter', mode = 'markers') %>% 
-      add_lines(y = ~fitted(loess(diversion ~ month))) %>% 
-      layout(xaxis = list(title = 'month')) %>% 
+      plot_ly(x = ~forcats::fct_inorder(month.abb[month]), y = ~diversion, type = 'scatter', mode = 'markers',
+              text = ~paste0('<b>Year </b>', year, "<br>", pretty_num(diversion)), hoverinfo = 'text',
+              marker = list(color = 'rgba(54,144,192,.7)')) %>% 
+      add_lines(y = ~fitted(loess(diversion ~ month)),
+                line = list(color = 'rgba(5,112,176, 1)')) %>% 
+      layout(xaxis = list(title = 'month'), showlegend = FALSE) %>% 
       config(displayModeBar = FALSE)
   })
   
@@ -81,25 +85,29 @@ rearing_survival <- function(input, output, session, shed) {
     month() %>% 
       dplyr::select(year, month, diversion, flow) %>% 
       dplyr::mutate(p_div = diversion / (diversion + flow)) %>% 
-      plot_ly(x = ~forcats::fct_inorder(month.abb[month]), y = ~p_div, type = 'scatter', mode = 'markers') %>% 
-      add_lines(y = ~fitted(loess(p_div ~ month))) %>% 
-      layout(xaxis = list(title = 'month'), yaxis = list(title = 'proportion diverted')) %>% 
+      plot_ly(x = ~forcats::fct_inorder(month.abb[month]), y = ~p_div, type = 'scatter', mode = 'markers',
+              text = ~paste0('<b>Year </b>', year, "<br>", pretty_num(p_div)), hoverinfo = 'text', 
+              marker = list(color = 'rgba(54,144,192,.7)')) %>% 
+      add_lines(y = ~fitted(loess(p_div ~ month)),
+                line = list(color = 'rgba(5,112,176, 1)')) %>% 
+      layout(xaxis = list(title = 'month'), yaxis = list(title = 'proportion diverted'),
+             showlegend = FALSE) %>% 
       config(displayModeBar = FALSE)
   })
   
-  output$contact_map <- renderLeaflet({
-    
-    pal <- colorFactor(palette = 'Paired', domain = contact_pts$WebLegend)
-    
-    leaflet() %>% 
-      addPolygons(data = CVPIAwatersheds, weight = 1, group = 'Watersheds', label = ~Moonshed) %>% 
-      addCircleMarkers(data = contact_pts, weight = 1, radius = 7, opacity = 1, fillOpacity = 0.75, 
-                       popup = ~paste(paste0("<b>", SiteType, "</b>"), SiteName, sep = "<br/>"), 
-                       label = ~WebLegend, color = ~pal(WebLegend)) %>%
-      addProviderTiles(providers$CartoDB.Positron, group = 'Grey Basemap') %>% 
-      addProviderTiles(providers$Esri.WorldImagery, group = 'Satelite Basemap') %>%
-      addLayersControl(baseGroups = c('Grey Basemap', 'Satelite Basemap'), overlayGroups = c('Watersheds')) 
-  })
+  # output$contact_map <- renderLeaflet({
+  #   
+  #   pal <- colorFactor(palette = 'Set3', domain = contact_pts$WebLegend)
+  #   
+  #   leaflet() %>% 
+  #     addPolygons(data = CVPIAwatersheds, weight = 2, group = 'Watersheds', label = ~Moonshed, fillOpacity = 0.1) %>% 
+  #     addCircleMarkers(data = contact_pts, weight = 1, radius = 7, opacity = 1, fillOpacity = 0.75, 
+  #                      popup = ~paste(paste0("<b>", SiteType, "</b>"), SiteName, sep = "<br/>"), 
+  #                      label = ~WebLegend, color = ~pal(WebLegend), group = 'Contact Points') %>%
+  #     addProviderTiles(providers$CartoDB.Positron, group = 'Grey Basemap') %>% 
+  #     addProviderTiles(providers$Esri.WorldImagery, group = 'Satelite Basemap') %>%
+  #     addLayersControl(baseGroups = c('Grey Basemap', 'Satelite Basemap'), overlayGroups = c('Watersheds', 'Contact Points')) 
+  # })
   
   temps <- reactive({
     if (input$temp == 0) {

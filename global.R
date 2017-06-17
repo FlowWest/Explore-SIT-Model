@@ -16,6 +16,10 @@ source('modules/sources.R')
 source('R/juv_survival.R')
 
 
+pretty_num <- function(num, places = 2) {
+  format(round(num, places), big.mark = ',', drop = FALSE)
+}
+
 misc_inputs <- readr::read_rds('data/misc.rds')
 
 #CVPIAdata::monthly_reach_data, contains diversion and temperature data
@@ -31,8 +35,8 @@ shed_with_div <- monthly %>%
   magrittr::extract2(1)
 
 
-contact_pts <- rgdal::readOGR('data/CalFishBarrier_clippedCVPIA.shp', stringsAsFactors = FALSE) %>% 
-  spTransform(CRS("+proj=longlat +datum=WGS84 +no_defs"))
-
-CVPIAwatersheds <- rgdal::readOGR('data/CVPIAWatersheds.shp', stringsAsFactors = FALSE) %>% 
-  spTransform(CRS("+proj=longlat +datum=WGS84 +no_defs")) 
+# contact_pts <- rgdal::readOGR('data/CalFishBarrier_clippedCVPIA.shp', stringsAsFactors = FALSE) %>% 
+#   spTransform(CRS("+proj=longlat +datum=WGS84 +no_defs"))
+# 
+# CVPIAwatersheds <- rgdal::readOGR('data/CVPIAWatersheds.shp', stringsAsFactors = FALSE) %>% 
+#   spTransform(CRS("+proj=longlat +datum=WGS84 +no_defs")) 
