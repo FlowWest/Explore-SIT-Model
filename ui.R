@@ -5,7 +5,9 @@ shinyUI(navbarPage(
   tabPanel('Rearing Survival', 
            watershedUI('one'),
            rearing_survivalUI('one')),
-  tabPanel('Spawning', spawningUI('one')),
+  tabPanel('Spawning', 
+           watershedUI('two'),
+           spawningUI('one')),
   tabPanel('Sources', sourcesUI('one'))
   
   
