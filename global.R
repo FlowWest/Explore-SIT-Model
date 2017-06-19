@@ -14,6 +14,7 @@ source('modules/rearing_survival.R')
 source('modules/spawning.R')
 source('modules/contact.R')
 source('modules/sources.R')
+source('modules/about.R')
 source('R/juv_survival.R')
 
 

@@ -24,8 +24,7 @@ sourcesUI <- function(id) {
                     target = '_blank', 'Bypass'),
              tags$h3('Outmigrating Survival'),
              tags$a(href = 'https://s3-us-west-2.amazonaws.com/cvpia-reference-docs/2012+Chinook+south+Delta+survival+study+9+4+15+Final.pdf',
-                    target = '_blank', 'Delta'))
-    )
+                    target = '_blank', 'Delta')))
   )
 }
 
