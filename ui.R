@@ -8,6 +8,8 @@ shinyUI(navbarPage(
   tabPanel('Spawning', 
            watershedUI('two'),
            spawningUI('one')),
+  tabPanel('Contact Points',
+           contactUI('one')),
   tabPanel('Sources', sourcesUI('one'))
   
   

@@ -12,6 +12,7 @@ library(magrittr)
 source('modules/watershed.R')
 source('modules/rearing_survival.R')
 source('modules/spawning.R')
+source('modules/contact.R')
 source('modules/sources.R')
 source('R/juv_survival.R')
 

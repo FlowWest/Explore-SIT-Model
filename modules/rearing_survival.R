@@ -10,12 +10,13 @@ rearing_survivalUI <- function(id) {
              uiOutput(ns('cont')),
              uiOutput(ns('pred')),
              uiOutput(ns('strand')),
-             numericInput(ns('prop_div'), 'Proportion Diverted', min = 0, max = 1, value = .6, step = .05),
-             numericInput(ns('tot_div'), 'Total Diverted', min = 0, value = 300),
-             radioButtons(ns('temp'), 'Temperature Exceedance', 
+             numericInput(ns('prop_div'), 'Proportion Diverted*', min = 0, max = 1, value = .6, step = .05),
+             numericInput(ns('tot_div'), 'Total Diverted*', min = 0, value = 300),
+             radioButtons(ns('temp'), 'Temperature Exceedance*', 
                           choiceNames = c('Monthly Mean < 20°C', 'Montly Mean > 20°C', 'Montly Mean > 25°C'),
                           choiceValues = c(0 , 1, 2),
-                          selected = 0)),
+                          selected = 0),
+             tags$h5('* Value varies by month', id = 'note')),
       column(width = 8, 
              div(id = 'context',
                  tags$h3('Context'),
@@ -25,9 +26,10 @@ rearing_survivalUI <- function(id) {
                             tags$p('1970-1989 Cal Lite Simulated flows')),
                    tabPanel('Proportion Diversion',
                             plotlyOutput(ns('p_div')),
+                            tags$p('1970-1989 Cal Lite Simulated flows')),
+                   tabPanel('Average Temperature',
+                            plotlyOutput(ns('temp_graph')),
                             tags$p('1970-1989 Cal Lite Simulated flows'))
-                   # tabPanel('Contact Points',
-                   #          withSpinner(leafletOutput(ns('contact_map'), height = 600), color = '#666666', type = 8))
                  ))),
       column(width = 2,
              tags$h3('Percent Survival'),
@@ -58,7 +60,7 @@ rearing_survival <- function(input, output, session, shed) {
   
   month <- reactive({
     monthly %>% 
-      dplyr::filter(watershed == shed(), year >= 1970, year < 1990, month < 9) 
+      dplyr::filter(watershed == shed(), year >= 1970, year < 1990, month < 9)
   })
   
   output$div <- renderPlotly({
@@ -95,19 +97,18 @@ rearing_survival <- function(input, output, session, shed) {
       config(displayModeBar = FALSE)
   })
   
-  # output$contact_map <- renderLeaflet({
-  #   
-  #   pal <- colorFactor(palette = 'Set3', domain = contact_pts$WebLegend)
-  #   
-  #   leaflet() %>% 
-  #     addPolygons(data = CVPIAwatersheds, weight = 2, group = 'Watersheds', label = ~Moonshed, fillOpacity = 0.1) %>% 
-  #     addCircleMarkers(data = contact_pts, weight = 1, radius = 7, opacity = 1, fillOpacity = 0.75, 
-  #                      popup = ~paste(paste0("<b>", SiteType, "</b>"), SiteName, sep = "<br/>"), 
-  #                      label = ~WebLegend, color = ~pal(WebLegend), group = 'Contact Points') %>%
-  #     addProviderTiles(providers$CartoDB.Positron, group = 'Grey Basemap') %>% 
-  #     addProviderTiles(providers$Esri.WorldImagery, group = 'Satelite Basemap') %>%
-  #     addLayersControl(baseGroups = c('Grey Basemap', 'Satelite Basemap'), overlayGroups = c('Watersheds', 'Contact Points')) 
-  # })
+  output$temp_graph <- renderPlotly({
+    month() %>% 
+      dplyr::select(year, month, avg_temp) %>% 
+      plot_ly(x = ~forcats::fct_inorder(month.abb[month]), y = ~avg_temp, type = 'scatter', mode = 'markers',
+              text = ~paste0('<b>Year </b>', year, "<br>", pretty_num(avg_temp)), hoverinfo = 'text', 
+              marker = list(color = 'rgba(54,144,192,.7)'), jitter = .3) %>% 
+      add_lines(y = ~fitted(loess(avg_temp ~ month)),
+                line = list(color = 'rgba(5,112,176, 1)')) %>% 
+      layout(xaxis = list(title = 'month'), yaxis = list(title = 'average temperature'),
+             showlegend = FALSE) %>% 
+      config(displayModeBar = FALSE)
+  })
   
   temps <- reactive({
     if (input$temp == 0) {

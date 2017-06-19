@@ -5,6 +5,8 @@ shinyServer(function(input, output, session) {
   
   callModule(module = rearing_survival, id = 'one', shed = one_watershed)
   callModule(module = spawning, id = 'one', shed =  two_watershed)
+  callModule(module = contact, id = 'one')
+  
   
   observeEvent(input$`one-shed`, {
     updateSelectInput(session, 'two-shed', selected = input$`one-shed`)
