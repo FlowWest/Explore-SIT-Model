@@ -67,11 +67,13 @@ rearing_survival <- function(input, output, session, shed) {
   
   observe({
     if (shed() %in% c('Yolo Bypass', 'Sutter Bypass')) {
-      shinyjs::disable('prop_div')
-      shinyjs::disable('tot_div')
+      shinyjs::hide('hab')
+      shinyjs::hide('prop_div')
+      shinyjs::hide('tot_div')
     } else {
-      shinyjs::enable('prop_div')
-      shinyjs::enable('tot_div')
+      shinyjs::show('hab')
+      shinyjs::show('prop_div')
+      shinyjs::show('tot_div')
     }
   })
   
@@ -156,7 +158,11 @@ rearing_survival <- function(input, output, session, shed) {
   })
   
   output$cont <- renderUI({
-    numericInput(ns('contact'), 'Number of Contact Points', min = 0, value = this_misc()$contact)
+    if (shed() %in% c('Yolo Bypass', 'Sutter Bypass')) {
+      NULL
+    } else {
+      numericInput(ns('contact'), 'Number of Contact Points', min = 0, value = this_misc()$contact)
+    }
   })
   
   output$pred <- renderUI({
@@ -164,7 +170,11 @@ rearing_survival <- function(input, output, session, shed) {
   })
   
   output$strand <- renderUI({
-    numericInput(ns('prop_strand'), 'Proportion Stranded', min = 0, max = 1, value = this_misc()$P.strand.early, step = .05)
+    if (shed() %in% c('Yolo Bypass', 'Sutter Bypass')) {
+      NULL
+    } else {
+      numericInput(ns('prop_strand'), 'Proportion Stranded', min = 0, max = 1, value = this_misc()$P.strand.early, step = .05)
+    }    
   })
   
   surv <- reactive({
