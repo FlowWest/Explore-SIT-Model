@@ -38,9 +38,8 @@ shed_with_div <- monthly %>%
   unique() %>% 
   magrittr::extract2(1)
 
+contact_pts <- rgdal::readOGR('data/CalFishBarrier_clippedCVPIA.shp', stringsAsFactors = FALSE) %>%
+  spTransform(CRS("+proj=longlat +datum=WGS84 +no_defs"))
 
-# contact_pts <- rgdal::readOGR('data/CalFishBarrier_clippedCVPIA.shp', stringsAsFactors = FALSE) %>% 
-#   spTransform(CRS("+proj=longlat +datum=WGS84 +no_defs"))
-# 
-# CVPIAwatersheds <- rgdal::readOGR('data/CVPIAWatersheds.shp', stringsAsFactors = FALSE) %>% 
-#   spTransform(CRS("+proj=longlat +datum=WGS84 +no_defs")) 
+CVPIAwatersheds <- rgdal::readOGR('data/CVPIAWatersheds.shp', stringsAsFactors = FALSE) %>%
+  spTransform(CRS("+proj=longlat +datum=WGS84 +no_defs"))
