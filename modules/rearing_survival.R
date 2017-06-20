@@ -67,6 +67,11 @@ rearing_survival <- function(input, output, session, shed) {
       dplyr::filter(watershed == shed(), year >= 1970, year < 1990, month < 9)
   })
   
+  observeEvent(shed(), {
+    shinyjs::reset('prop_div')
+    shinyjs::reset('tot_div')
+  })
+  
   observe({
     if (shed() %in% c('Yolo Bypass', 'Sutter Bypass')) {
       shinyjs::hide('hab')
@@ -89,11 +94,12 @@ rearing_survival <- function(input, output, session, shed) {
     month() %>% 
       dplyr::select(year, month, diversion) %>% 
       plot_ly(x = ~forcats::fct_inorder(month.abb[month]), y = ~diversion, type = 'scatter', mode = 'markers',
-              text = ~paste0('<b>Year </b>', year, "<br>", pretty_num(diversion)), hoverinfo = 'text',
+              text = ~paste0('<b>Year </b>', year, "<br>", pretty_num(diversion), ' cfs'), hoverinfo = 'text',
               marker = list(color = 'rgba(54,144,192,.7)')) %>% 
       add_lines(y = ~fitted(loess(diversion ~ month)),
                 line = list(color = 'rgba(5,112,176, 1)')) %>% 
-      layout(xaxis = list(title = 'month'), showlegend = FALSE) %>% 
+      layout(xaxis = list(title = 'month'), yaxis = list(title = 'diversions (cfs)'),
+             showlegend = FALSE) %>% 
       config(displayModeBar = FALSE)
   })
   
@@ -119,11 +125,11 @@ rearing_survival <- function(input, output, session, shed) {
     month() %>% 
       dplyr::select(year, month, avg_temp) %>% 
       plot_ly(x = ~forcats::fct_inorder(month.abb[month]), y = ~avg_temp, type = 'scatter', mode = 'markers',
-              text = ~paste0('<b>Year </b>', year, "<br>", pretty_num(avg_temp)), hoverinfo = 'text', 
+              text = ~paste0('<b>Year </b>', year, "<br>", pretty_num(avg_temp), ' °C'), hoverinfo = 'text', 
               marker = list(color = 'rgba(54,144,192,.7)'), jitter = .3) %>% 
       add_lines(y = ~fitted(loess(avg_temp ~ month)),
                 line = list(color = 'rgba(5,112,176, 1)')) %>% 
-      layout(xaxis = list(title = 'month'), yaxis = list(title = 'average temperature'),
+      layout(xaxis = list(title = 'month'), yaxis = list(title = 'average temperature (°C)'),
              showlegend = FALSE) %>% 
       config(displayModeBar = FALSE)
   })
