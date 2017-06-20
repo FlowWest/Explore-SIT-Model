@@ -1,6 +1,5 @@
 rearing_survivalUI <- function(id) {
   ns <- NS(id)
-  
   tagList(
     fluidRow(
       column(width = 2,
@@ -10,8 +9,8 @@ rearing_survivalUI <- function(id) {
              uiOutput(ns('cont')),
              uiOutput(ns('pred')),
              uiOutput(ns('strand')),
-             numericInput(ns('prop_div'), 'Proportion Diverted*', min = 0, max = 1, value = .6, step = .05),
-             numericInput(ns('tot_div'), 'Total Diverted*', min = 0, value = 300),
+             numericInput(ns('prop_div'), 'Proportion Diverted*', min = 0, max = 1, value = 0, step = .05),
+             numericInput(ns('tot_div'), 'Total Diverted*', min = 0, value = 0),
              radioButtons(ns('temp'), 'Temperature Exceedance*', 
                           choiceNames = c('Monthly Mean < 20°C', 'Montly Mean > 20°C', 'Montly Mean > 25°C'),
                           choiceValues = c(0 , 1, 2),
@@ -64,6 +63,18 @@ rearing_survival <- function(input, output, session, shed) {
   month <- reactive({
     monthly %>% 
       dplyr::filter(watershed == shed(), year >= 1970, year < 1990, month < 9)
+  })
+  
+  observe({
+    if (shed() %in% c('Yolo Bypass', 'Sutter Bypass')) {
+      shinyjs::hide('hab')
+      shinyjs::hide('prop_div')
+      shinyjs::hide('tot_div')
+    } else {
+      shinyjs::show('hab')
+      shinyjs::show('prop_div')
+      shinyjs::show('tot_div')
+    }
   })
   
   output$div <- renderPlotly({
@@ -147,7 +158,11 @@ rearing_survival <- function(input, output, session, shed) {
   })
   
   output$cont <- renderUI({
-    numericInput(ns('contact'), 'Number of Contact Points', min = 0, value = this_misc()$contact)
+    if (shed() %in% c('Yolo Bypass', 'Sutter Bypass')) {
+      NULL
+    } else {
+      numericInput(ns('contact'), 'Number of Contact Points', min = 0, value = this_misc()$contact)
+    }
   })
   
   output$pred <- renderUI({
@@ -155,12 +170,20 @@ rearing_survival <- function(input, output, session, shed) {
   })
   
   output$strand <- renderUI({
-    numericInput(ns('prop_strand'), 'Proportion Stranded', min = 0, max = 1, value = this_misc()$P.strand.early, step = .05)
+    if (shed() %in% c('Yolo Bypass', 'Sutter Bypass')) {
+      NULL
+    } else {
+      numericInput(ns('prop_strand'), 'Proportion Stranded', min = 0, max = 1, value = this_misc()$P.strand.early, step = .05)
+    }    
   })
   
   surv <- reactive({
     
-    if (input$hab == 'In-Channel') {
+    if (shed() %in% c('Yolo Bypass', 'Sutter Bypass')) {
+      surv <- Juv.BYP.Ss(maxT25 = temps()$T25,
+                        aveT20 = temps()$T20,
+                        high.pred = input$high_pred) * 100
+    } else if (input$hab == 'In-Channel') {
       surv <- Juv.IC.S(maxT25 = temps()$T25,
                        aveT20 = temps()$T20,
                        high.pred = input$high_pred,

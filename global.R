@@ -7,6 +7,7 @@ library(sp)
 library(rgdal)
 library(leaflet)
 library(shinycssloaders)
+library(shinyjs)
 library(magrittr)
 
 source('modules/watershed.R')
@@ -31,9 +32,6 @@ inundated <- readr::read_rds('data/inundated_areas.rds')
 threshold <- inundated %>% 
   dplyr::select(watershed = Watershed, threshold = threshold_2yr_14d, acres = fp_area_acres)
 
-# # monthly temperature statistics for juve survival
-# aveT20 <- ifelse(juv.tmp[, 2 + mnth]> 20, 1, 0)
-# maxT25 <- ifelse(juv.tmp[, 2 + mnth]> 25, 1, 0)
 shed_with_div <- monthly %>% 
   dplyr::filter(!is.na(diversion)) %>% 
   dplyr::select(watershed) %>% 

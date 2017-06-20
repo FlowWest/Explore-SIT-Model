@@ -92,6 +92,31 @@ Juv.FP.S <- function(maxT25, aveT20, high.pred, no.con.pts, prop.div, tot.div, s
         l_in_channel * l_in_floodplain, 1)
 }
 
+#' Determines the size specific survival rates of juveniles from each 
+#' watershed/bypass rearing in the floodplains of a bypass (e.g. Yolo). Output 
+#' is a 31x4 matrix. Each row represents each watershed/bypass that the juveniles 
+#' originated from, and the columns represent each size class from smallest to largest.
+#' @name Juv.BYP.S
+#' @param maxT25 Boolean: if 1 average montly stream temperature > 25degC during rearing. 
+#' A 1x31 vector, where each element represents a watershed/bypass.
+#' @param aveT20 Boolean: if 1 average monthly stream temperature > 20degC during rearing. 
+#' A 1x31 vector, where each element represents a watershed/bypass.
+#' @param high.pred Probability of high predation. A 1x31 vector, where each 
+#' element represents a watershed/bypass.
+Juv.BYP.Ss <- function(maxT25, aveT20, high.pred) {
+
+  score <- -0.75 + -0.717 * aveT20 + 0.47 - 0.122 * high.pred
+
+  s <- inv.logit(score) * (1 - maxT25) + maxT25 * 0.1
+
+  m <- inv.logit(score + 1.48 ) * (1 - maxT25) + maxT25 * 0.1
+
+  l <- inv.logit(score + 2.223 ) * (1 - maxT25) + maxT25 * 0.1
+
+  return(cbind(s,m,l,1))
+}
+
+
 #' Produces size specific estimates of out-migrant survival for juveniles 
 #' migrating out of one of the Sacramento mainstem areas (UM, LM, LL). Output is
 #' a 1x4 vectors where each element represents a size class from smallest to largest. 
