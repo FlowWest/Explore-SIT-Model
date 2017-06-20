@@ -124,7 +124,8 @@ rearing_survival <- function(input, output, session, shed) {
       dplyr::summarise(prop_active = sum(fp_active, na.rm = TRUE)/n()) %>% 
       plot_ly(x = ~forcats::fct_inorder(month.abb[month]), y = ~prop_active, type = 'bar',
               hoverinfo = 'text', text = ~prop_active) %>% 
-      layout(xaxis = list(title = 'month'), yaxis = list(title = 'proportion of years with activated floodplain'),
+      layout(xaxis = list(title = 'month'), 
+             yaxis = list(title = 'proportion of years with activated floodplain', range = c(0, 1)),
              showlegend = FALSE) %>% 
       config(displayModeBar = FALSE)
   })
