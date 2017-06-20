@@ -29,6 +29,9 @@ rearing_survivalUI <- function(id) {
                             tags$p('1970-1989 Cal Lite Simulated flows')),
                    tabPanel('Average Temperature',
                             plotlyOutput(ns('temp_graph')),
+                            tags$p('1970-1989 Cal Lite Simulated flows')),
+                   tabPanel('Flood Plain Activation',
+                            plotlyOutput(ns('fp')),
                             tags$p('1970-1989 Cal Lite Simulated flows'))
                  ))),
       column(width = 2,
@@ -106,6 +109,22 @@ rearing_survival <- function(input, output, session, shed) {
       add_lines(y = ~fitted(loess(avg_temp ~ month)),
                 line = list(color = 'rgba(5,112,176, 1)')) %>% 
       layout(xaxis = list(title = 'month'), yaxis = list(title = 'average temperature'),
+             showlegend = FALSE) %>% 
+      config(displayModeBar = FALSE)
+  })
+  
+  output$fp <- renderPlotly({
+    month() %>% 
+      dplyr::left_join(threshold) %>% 
+      dplyr::select(watershed, year, month, flow, threshold, acres) %>% 
+      dplyr::mutate(acres = replace(acres, flow < threshold, 0),
+                    sq_meters = acres * 4046.86,
+                    fp_active = ifelse(flow < threshold, 0, 1)) %>% 
+      dplyr::group_by(watershed, month) %>% 
+      dplyr::summarise(prop_active = sum(fp_active, na.rm = TRUE)/n()) %>% 
+      plot_ly(x = ~forcats::fct_inorder(month.abb[month]), y = ~prop_active, type = 'bar',
+              hoverinfo = 'text', text = ~prop_active) %>% 
+      layout(xaxis = list(title = 'month'), yaxis = list(title = 'proportion of years with activated floodplain'),
              showlegend = FALSE) %>% 
       config(displayModeBar = FALSE)
   })

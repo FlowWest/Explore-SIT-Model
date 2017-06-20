@@ -26,6 +26,7 @@ misc_inputs <- readr::read_rds('data/misc.rds')
 
 #CVPIAdata::monthly_reach_data, contains diversion and temperature data
 monthly <- readr::read_rds('data/monthly.rds')
+inundated <- readr::read_rds('data/inundated_areas.rds')
 
 # # monthly temperature statistics for juve survival
 # aveT20 <- ifelse(juv.tmp[, 2 + mnth]> 20, 1, 0)
