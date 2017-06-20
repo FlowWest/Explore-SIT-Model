@@ -11,6 +11,11 @@ h4 {
   width: 225px;
 }
 
+.shiny-output-error-validation {
+  padding-top:20px;
+  padding-left:10px;
+}
+
 #context {
   border-left: 1px solid #D7D7D7;
   border-right: 1px solid #D7D7D7;
@@ -18,7 +23,7 @@ h4 {
   padding-right: 25px;
 }
 
-#note {
+.note {
   font-family: Georgia,"Times New Roman",Times,serif;
   font-size: 16px;
   line-height: 1.42857143;
@@ -37,4 +42,11 @@ h4 {
 #spawn_fry_text {
   border-right: 1px solid #D7D7D7;
   padding-right: 25px;
+}
+
+#one-temp {
+  border-bottom: solid 1px #D7D7D7;
+  padding-bottom: 10px;
+}
+
 }

@@ -8,14 +8,16 @@ rearing_survivalUI <- function(id) {
                           choices = c('In-Channel', 'Floodplain'), selected = 'In-Channel', inline = TRUE),
              uiOutput(ns('cont')),
              uiOutput(ns('pred')),
+             radioButtons(ns('timing'), label = 'Proportion Stranded*', choices = c('Early', 'Late'), selected = 'Early', inline = TRUE),
              uiOutput(ns('strand')),
-             numericInput(ns('prop_div'), 'Proportion Diverted*', min = 0, max = 1, value = 0, step = .05),
-             numericInput(ns('tot_div'), 'Total Diverted*', min = 0, value = 0),
-             radioButtons(ns('temp'), 'Temperature Exceedance*', 
+             numericInput(ns('prop_div'), 'Proportion Diverted**', min = 0, max = 1, value = 0, step = .05),
+             numericInput(ns('tot_div'), 'Total Diverted**', min = 0, value = 0),
+             radioButtons(ns('temp'), 'Temperature Exceedance**', 
                           choiceNames = c('Monthly Mean < 20°C', 'Montly Mean > 20°C', 'Montly Mean > 25°C'),
                           choiceValues = c(0 , 1, 2),
                           selected = 0),
-             tags$h5('* Value varies by month', id = 'note')),
+             tags$h5('* Use early stranding rate for months January through April', class = 'note'),
+             tags$h5('** Value varies by month', class = 'note')),
       column(width = 8, 
              div(id = 'context',
                  tags$h3('Context'),
@@ -70,10 +72,12 @@ rearing_survival <- function(input, output, session, shed) {
       shinyjs::hide('hab')
       shinyjs::hide('prop_div')
       shinyjs::hide('tot_div')
+      shinyjs::hide('timing')
     } else {
       shinyjs::show('hab')
       shinyjs::show('prop_div')
       shinyjs::show('tot_div')
+      shinyjs::show('timing')
     }
   })
   
@@ -169,11 +173,19 @@ rearing_survival <- function(input, output, session, shed) {
     numericInput(ns('high_pred'), 'Proportion High Predation', min = 0, max = 1, value = this_misc()$High.pred, step = .05)
   })
   
+  timin <- reactive({
+    if (input$timing == 'Early') {
+      this_misc()$P.strand.early
+    } else {
+      this_misc()$P.strand.late
+    }
+  })
+  
   output$strand <- renderUI({
     if (shed() %in% c('Yolo Bypass', 'Sutter Bypass')) {
       NULL
     } else {
-      numericInput(ns('prop_strand'), 'Proportion Stranded', min = 0, max = 1, value = this_misc()$P.strand.early, step = .05)
+      numericInput(ns('prop_strand'), label = NULL, min = 0, max = 1, value = timin(), step = .05)
     }    
   })
   
