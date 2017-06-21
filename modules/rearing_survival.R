@@ -21,20 +21,21 @@ rearing_survivalUI <- function(id) {
       column(width = 8, 
              div(id = 'context',
                  tags$h3('Context'),
-                 tabsetPanel(
-                   tabPanel('Total Diversions',
-                            plotlyOutput(ns('div')),
-                            tags$p('1970-1989 Cal Lite Simulated flows')),
-                   tabPanel('Proportion Diversion',
-                            plotlyOutput(ns('p_div')),
-                            tags$p('1970-1989 Cal Lite Simulated flows')),
-                   tabPanel('Average Temperature',
-                            plotlyOutput(ns('temp_graph')),
-                            tags$p('1970-1989 Cal Lite Simulated flows')),
-                   tabPanel('Flood Plain Activation',
-                            plotlyOutput(ns('fp')),
-                            tags$p('1970-1989 Cal Lite Simulated flows'))
-                 ))),
+                 fluidRow(
+                   tabsetPanel(
+                     tabPanel('Total Diversions',
+                              plotlyOutput(ns('div'))),
+                     tabPanel('Proportion Diversion',
+                              plotlyOutput(ns('p_div'))),
+                     tabPanel('Average Temperature',
+                              plotlyOutput(ns('temp_graph'))),
+                     tabPanel('Flood Plain Activation',
+                              plotlyOutput(ns('fp')))
+                 )),
+                 fluidRow(
+                   tags$p('1970-1989 Cal Lite Simulated flows')
+                 )
+                 )),
       column(width = 2,
              tags$h3('Percent Survival'),
              tags$div(

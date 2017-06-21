@@ -6,12 +6,22 @@ tagList(
     header= includeCSS('styles.css'),
     navbarMenu('Rearing Survival',
                tabPanel('Calculator', icon = icon('calculator'),
+                        fluidRow(
                         watershedUI('one'),
+                        column(width = 10,
+                               tags$p("This calculator returns juvenile rearing survival rate for each 
+                                      watershed by size class given a set of hypothetical monthly conditions. 
+                                      The center charts give context for potential montly input values. 
+                                      Inputs that do not vary by month are set to the current value used by the model.", 
+                                      style = 'padding-left:10px;')  
+                        )),
                         rearing_survivalUI('one')),
                tabPanel('Contact Points Map', icon = icon('globe'),
                         contactUI('one'))),
     tabPanel('Spawning', 
-             watershedUI('two'),
+             fluidRow(
+               watershedUI('two')
+             ),
              spawningUI('one')),
     tabPanel('Sources', sourcesUI('one')),
     tabPanel('About', aboutUI('one'))
