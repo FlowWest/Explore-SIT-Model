@@ -10,6 +10,9 @@ aboutUI <- function(id) {
              tags$h5('U.S. Geological Survey, Oregon Cooperative Cooperative'),
              tags$h5('Fish and Wildlife Research Unit, Oregon State University'),
              tags$h5('Corvallis, Oregon 97331-3803'),
+             tags$br(),
+             tags$img(src = 'conceptual_model.png', width = 1000),
+             tags$br(),
              tags$br())
     ),
     fluidRow(

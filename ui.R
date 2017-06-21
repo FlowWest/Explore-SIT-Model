@@ -1,7 +1,7 @@
 tagList(
   shinyjs::useShinyjs(),
   navbarPage(
-    title = 'SIT Model Explorer',
+    title = 'SIT Model Explorer (beta)',
     theme = shinytheme('readable'),
     header= includeCSS('styles.css'),
     navbarMenu('Rearing Survival',
@@ -9,7 +9,7 @@ tagList(
                         fluidRow(
                         watershedUI('one'),
                         column(width = 10,
-                               tags$p("This calculator returns juvenile rearing survival rate for each 
+                               tags$p("This calculator returns juvenile rearing survival rates for each 
                                       watershed by size class given a set of hypothetical monthly conditions. 
                                       The center charts give context for potential montly input values. 
                                       Inputs that do not vary by month are set to the current value used by the model.", 
