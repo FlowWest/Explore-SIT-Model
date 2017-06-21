@@ -15,18 +15,14 @@ contactUI <- function(id) {
 contact <- function(input, output, session) {
   output$contact_map <- renderLeaflet({
 
-    pal <- colorFactor(palette = 'Set3', domain = contact_pts$WebLegend)
-
     leaflet() %>%
       addPolygons(data = CVPIAwatersheds, weight = 2, group = 'Watersheds', label = ~Moonshed, fillOpacity = 0.1) %>%
-      addCircles(data = contact_pts, weight = 1, radius = 20, opacity = 1, fillOpacity = 0.75,
-                       popup = ~paste(paste0("<b>", SiteType, "</b>"), SiteName, sep = "<br/>"),
-                       label = ~WebLegend, color = '#C51B8A', group = 'Contact Points') %>%
       addProviderTiles(providers$CartoDB.Positron, group = 'Grey Basemap') %>%
       addProviderTiles(providers$Esri.WorldImagery, group = 'Satelite Basemap') %>%
-      addLayersControl(baseGroups = c('Grey Basemap', 'Satelite Basemap'), overlayGroups = c('Watersheds', 'Contact Points'))
+      addLayersControl(baseGroups = c('Grey Basemap', 'Satelite Basemap'), overlayGroups = c('Watersheds', 'Contact Points')) %>%  
+      addCircleMarkers(data = contact_pts, weight = 1, radius = 6, opacity = 1, fillOpacity = 0.75,
+                 popup = ~paste(paste0("<b>", SiteType, "</b>"), SiteName, sep = "<br/>"),
+                 label = ~WebLegend, color = '#C51B8A', group = 'Contact Points', 
+                 clusterOptions = markerClusterOptions())
   })
 }
-
-
-
