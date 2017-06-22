@@ -24,17 +24,15 @@ rearing_survivalUI <- function(id) {
                  fluidRow(
                    tabsetPanel(
                      tabPanel('Total Diversions',
-                              plotlyOutput(ns('div'))),
+                              plotlyOutput(ns('div'), height = 500)),
                      tabPanel('Proportion Diversion',
-                              plotlyOutput(ns('p_div'))),
+                              plotlyOutput(ns('p_div'), height = 500)),
                      tabPanel('Average Temperature',
-                              plotlyOutput(ns('temp_graph'))),
+                              plotlyOutput(ns('temp_graph'), height = 500)),
                      tabPanel('Flood Plain Activation',
-                              plotlyOutput(ns('fp')))
-                 )),
-                 fluidRow(
-                   tags$p('1970-1989 Cal Lite Simulated flows')
-                 )
+                              plotlyOutput(ns('fp'), height = 500)),
+                     tags$p('1970-1989 Cal Lite Simulated flows')
+                 ))
                  )),
       column(width = 2,
              tags$h3('Percent Survival'),
