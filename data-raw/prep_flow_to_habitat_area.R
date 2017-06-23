@@ -10,10 +10,10 @@ library(stringr)
 
 # get mark's flow to area realtionships data------------------------------------
 metadata_inchannel <- readxl::read_excel('data-raw/inchannel_flow_area.xlsx',
-                       sheet = 'Metadata')
+                       sheet = 'Metadata', na = 'N/A')
 
 metadata_floodplain <- readxl::read_excel('data-raw/floodplain_flow_area.xlsx',
-                               sheet = 'Metadata')
+                               sheet = 'Metadata', na = 'N/A')
 
 metadata_fp <- metadata_floodplain[ , 1:18] %>%
   dplyr::rename(`FP Source / Method` = `Source / Method`) %>%
@@ -31,11 +31,11 @@ metadata <- metadata_inchannel[ , 1:30] %>%
                              'Upper-mid Sacramento River')) %>%
   dplyr::mutate(Watershed = replace(Watershed, Watershed == 'Mid South Delta',
                                     'South Delta')) %>%
-  dplyr::rename(channel_inundated_area_acres = `Total Inundated Area (acres)`) %>%
+  dplyr::rename(channel_inundated_area_acres = `Total Inundated Area (acres)`, median_flow_channel = `50% Probability Flow - Wet (cfs)`) %>%
   dplyr::mutate(reach_length = as.numeric(`Reach Length (ft)`),
                 fp_area_acres = as.numeric(`Existing FP Area (acres)`),
                 threshold_2yr_14d = as.numeric(`Threshold 2-yr, 14-d Flow (cfs)`)) %>%
-  dplyr::select(Watershed, reach_length,
+  dplyr::select(Watershed, reach_length, median_flow_channel,
          `Spawning Source  / Method`:`Parr Source  / Method`, `FP Source / Method`,
          channel_inundated_area_acres, threshold_2yr_14d, fp_area_acres, `Spawning Wet`, 
          `Fry Wet`, `Parr Wet`)
@@ -55,3 +55,8 @@ inundated_areas <- metadata %>%
 
 readr::write_rds(inundated_areas, 'data/inundated_areas.rds')
 #TODO(fix with Mark around)
+
+#for carrying capacity app----
+inundated_areas %>% 
+  dplyr::select(Watershed, `Median In-channel Flow` = median_flow_channel, `Floodplain Threshold` = threshold_2yr_14d) %>% 
+  readr::write_rds('data/flow_notes.rds') # moved to carrying capacity app

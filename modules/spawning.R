@@ -22,7 +22,7 @@ spawningUI <- function(id) {
                     dapibus imperdiet. Cras mattis urna sed turpis suscipit dictum. Donec posuere mi 
                     metus, id facilisis felis euismod et. Proin malesuada, odio ornare condimentum 
                     volutpat, metus mauris mattis quam, eget efficitur nisi quam elementum justo.'),
-                      tags$p('To explore this relation further, visit the', 
+                      tags$h5('To explore this relation further, visit the', 
                              tags$a(href = 'https://flowwest.shinyapps.io/carrying-capacity-app/', 
                                     target = '_blank', 'Carrying Capacity App.')))),
       column(width = 5,

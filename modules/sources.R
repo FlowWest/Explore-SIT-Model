@@ -3,7 +3,7 @@ sourcesUI <- function(id) {
   
   tagList(
     fluidRow(
-      column(width = 12,
+      column(width = 12, style = 'padding-left:30px;',
              tags$h3('Juvenile Survival'),
              tags$a(href = 'https://s3-us-west-2.amazonaws.com/cvpia-reference-docs/Brett+temperature+tolerance.pdf',
                     target = '_blank', 'Maximum Water Temperature'),
