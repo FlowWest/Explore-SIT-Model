@@ -29,7 +29,7 @@ rearing_survivalUI <- function(id) {
                               plotlyOutput(ns('p_div'), height = 500)),
                      tabPanel('Average Temperature',
                               plotlyOutput(ns('temp_graph'), height = 500)),
-                     tabPanel('Flood Plain Activation',
+                     tabPanel('Floodplain Activation',
                               plotlyOutput(ns('fp'), height = 500)),
                      tags$p('1970-1989 Cal Lite Simulated flows')
                  ))
