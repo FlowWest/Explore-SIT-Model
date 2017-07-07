@@ -4,6 +4,9 @@ contactUI <- function(id) {
     fluidRow(
       column(width = 2,
              tags$h2('Contact Points'),
+             tags$p('Contact points were estimated for each watershed based on structures identified in the Passage 
+                    Assessment Database. The number of structures or “contact points” was used as a proxy for estimating 
+                    habitat that benefitted predators and reduces survival.'),
              tags$a('Source', href = 'http://www.calfish.org/tabid/420/Default.aspx', target = '_blank')),
       column(width = 10,
              withSpinner(leafletOutput(ns('contact_map'), height = 800), color = '#666666', type = 8))
