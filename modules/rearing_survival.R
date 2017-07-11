@@ -13,7 +13,7 @@ rearing_survivalUI <- function(id) {
              numericInput(ns('prop_div'), 'Proportion Diverted**', min = 0, max = 1, value = 0, step = .05),
              numericInput(ns('tot_div'), 'Total Diverted**', min = 0, value = 0),
              radioButtons(ns('temp'), 'Temperature Exceedance**', 
-                          choiceNames = c('Monthly Mean < 20°C', 'Montly Mean > 20°C', 'Montly Mean > 25°C'),
+                          choiceNames = c('Monthly Mean < 20°C', 'Monthly Mean > 20°C', 'Monthly Mean > 25°C'),
                           choiceValues = c(0 , 1, 2),
                           selected = 0),
              tags$h5('* Use early stranding rate for months January through April', class = 'note'),
