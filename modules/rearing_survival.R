@@ -8,7 +8,7 @@ rearing_survivalUI <- function(id) {
                           choices = c('In-Channel', 'Floodplain'), selected = 'In-Channel', inline = TRUE),
              uiOutput(ns('cont')),
              uiOutput(ns('pred')),
-             radioButtons(ns('timing'), label = 'Proportion Stranded*', choices = c('Early', 'Late'), selected = 'Early', inline = TRUE),
+             radioButtons(ns('timing'), label = 'Probability Stranded*', choices = c('Early', 'Late'), selected = 'Early', inline = TRUE),
              uiOutput(ns('strand')),
              numericInput(ns('prop_div'), 'Proportion Diverted**', min = 0, max = 1, value = 0, step = .05),
              numericInput(ns('tot_div'), 'Total Diverted**', min = 0, value = 0),
@@ -175,7 +175,7 @@ rearing_survival <- function(input, output, session, shed) {
   })
   
   output$pred <- renderUI({
-    numericInput(ns('high_pred'), 'Proportion High Predation', min = 0, max = 1, value = this_misc()$High.pred, step = .05)
+    numericInput(ns('high_pred'), 'Probability High Predation', min = 0, max = 1, value = this_misc()$High.pred, step = .05)
   })
   
   timin <- reactive({

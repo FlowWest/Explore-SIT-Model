@@ -7,9 +7,12 @@ spawningUI <- function(id) {
                       tags$h2('Spawners to Fry Model Inputs'),
                       tags$p('Each watershed estimates reproductive success as a function of the number of females, 
                              fecundity, and egg-to-fry survival. Potential spawners are the sum of natural adults 
-                             and hatchery strays, less a proportional harvest. Each female is assumed to carry 5522 eggs,
+                             and hatchery strays, less a proportional harvest. 
+                             The adult harvest and hatchery allocation are based on 2010-2012 coded wire tag studies.
+                             Each female is assumed to carry 5522 eggs,
                              and each redd is assumed to require 12.4 square meters of suitable spawning habitat. 
-                             Each watershed also has an estimated loss of eggs due to scour that results from fluctuating river flows.'),
+                             The model also assumes a 50/50 sex ratio.
+                             Each watershed has an estimated loss of eggs due to scour that results from fluctuating river flows.'),
                       tags$h5('To explore this relation further, visit the', 
                              tags$a(href = 'https://flowwest.shinyapps.io/carrying-capacity-app/', 
                                     target = '_blank', 'Carrying Capacity App.')))),
@@ -28,7 +31,7 @@ spawningUI <- function(id) {
                textOutput(ns('ad_harv'))
              ),
              tags$div(
-               tags$h4('Proportion Scour', class = 'spawn'),
+               tags$h4('Probability Scour', class = 'spawn'),
                textOutput(ns('scour'))
              )
       )
@@ -43,7 +46,7 @@ spawning <- function(input, output, session, shed) {
   })
   
   output$spawn_shed <- renderText(shed())
-  output$init_ad <- renderText(pretty_num(this_shed()$init.adult, 0))
+  output$init_ad <- renderText(pretty_num(this_shed()$init.adult * 1.5, 0))
   output$hatch <- renderText(pretty_num(this_shed()$hatch.alloc * qunif(0.5, 80000, 150000), 0))
   output$ad_harv <- renderText(this_shed()$A.HARV)
   output$scour <- renderText(this_shed()$P.scour.nst)

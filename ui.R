@@ -2,6 +2,7 @@ tagList(
   shinyjs::useShinyjs(),
   navbarPage(
     title = 'SIT Model Explorer (beta)',
+    windowTitle = 'SIT Model Explorer',
     theme = shinytheme('readable'),
     header= includeCSS('styles.css'),
     tabPanel('About', aboutUI('one')),
