@@ -4,10 +4,11 @@ contactUI <- function(id) {
     fluidRow(
       column(width = 2,
              tags$h2('Contact Points'),
-             tags$p('Contact points were estimated for each watershed based on structures identified in the Passage 
-                    Assessment Database. The number of structures or “contact points” was used as a proxy for estimating 
-                    habitat that benefitted predators and reduces survival.'),
-             tags$a('Source', href = 'http://www.calfish.org/tabid/420/Default.aspx', target = '_blank')),
+             tags$p('Contact points were estimated for each watershed based on structures identified in the', 
+                    tags$a('Passage Assessment Database', href = 'http://www.calfish.org/tabid/420/Default.aspx', target = '_blank'),
+                    'The number of structures or “contact points” was used as a proxy for estimating 
+                    habitat that benefitted predators and reduces survival. The limits of anadromy layer is 
+                    from the ESHE model.')),
       column(width = 10,
              withSpinner(leafletOutput(ns('contact_map'), height = 800), color = '#666666', type = 8))
     )
@@ -22,7 +23,9 @@ contact <- function(input, output, session) {
       addPolygons(data = CVPIAwatersheds, weight = 2, group = 'Watersheds', label = ~Moonshed, fillOpacity = 0.1) %>%
       addProviderTiles(providers$CartoDB.Positron, group = 'Grey Basemap') %>%
       addProviderTiles(providers$Esri.WorldImagery, group = 'Satelite Basemap') %>%
-      addLayersControl(baseGroups = c('Grey Basemap', 'Satelite Basemap'), overlayGroups = c('Watersheds', 'Contact Points')) %>%  
+      addLayersControl(baseGroups = c('Grey Basemap', 'Satelite Basemap'), 
+                       overlayGroups = c('Watersheds', 'Contact Points', 'Limit of Anadromy')) %>%  
+      addPolylines(data = limit_anadromy, group = 'Limit of Anadromy', label = ~River_Name) %>% 
       addCircleMarkers(data = contact_pts, weight = 1, radius = 6, opacity = 1, fillOpacity = 0.75,
                  popup = ~paste(paste0("<b>", SiteType, "</b>"), SiteName, sep = "<br/>"),
                  label = ~WebLegend, color = '#C51B8A', group = 'Contact Points', 
