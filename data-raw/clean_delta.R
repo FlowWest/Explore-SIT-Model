@@ -23,7 +23,7 @@ inputs %>%
 inputs %>% 
   select(watershed, temp.1:temp.12) %>% 
   gather(month, temperature, -watershed) %>% 
-  mutate(month = as.numeric(str_extract(month, '[1-9]+'))) %>% 
+  mutate(month = as.numeric(str_replace(month, 'temp.', ''))) %>% 
   arrange(watershed, month) %>% 
   write_rds('data/delta_temperature.rds')
 
