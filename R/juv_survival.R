@@ -149,3 +149,54 @@ Juv.OUTM.S <- function(Q.cms, aveT, tot.div, prop.div) {
 
   return(cbind(s, m, l, vl))
 }
+
+#' juvenile survival rearing in delta 
+#' @param maxT25 Boolean: if 1 average montly stream temperature > 25degC during rearing. 
+#' A 1x31 vector, where each element represents a watershed/bypass.
+#' @param aveT20 Boolean: if 1 average monthly stream temperature > 20degC during rearing. 
+#' A 1x31 vector, where each element represents a watershed/bypass.
+#' @param high.pred Probability of high predation. A 1x31 vector, where each element represents a watershed/bypass.
+#' @param no.con.pts Number of predator "hot spots" in each watershed. A 1x31 vector, where each element represents a watershed/bypass.
+#' @param prop.div Proportion of total flow diverted in each watershed. A 1x31 vector, where each element represents a watershed/bypass.
+#' @param tot.div Total amount of water diverted in each watershed/bypass. A 1x31 vector, where each element represents a watershed/bypass.
+Juv.DLT.S <- function(maxT25, aveT20, high.pred, no.con.pts, prop.div, tot.div) {
+  beta <- c(4.9, -0.717, -0.122, -0.0067662, -3.51, -0.00105)
+
+  score <- beta[1] +
+    beta[2] * aveT20 +
+    beta[3] * high.pred +
+    beta[4] * no.con.pts * high.pred +
+    beta[5] * prop.div +
+    beta[6] * tot.div
+
+  score_m <- score + 1.48
+  score_l <- score + 2.223
+
+  s <- inv.logit(score) * (1 - maxT25) + maxT25 * 0.1
+
+  m <- inv.logit(score_m) * (1 - maxT25) + maxT25 * 0.1
+
+  l <- inv.logit(score_l) * (1 - maxT25) + maxT25 * 0.1
+
+  return(cbind(s,m,l,1))
+}
+
+
+#' Delta outmigragion survival for juveniles
+#' @param Q.cms Flow in cms of the delta mainstem
+#' @param pctdiv The percentage of flow being diverted from the delta
+#' @param aveT Average temperature of the Delta.
+JuvD.OUTM.S <- function(Q.cms, pctdiv, aveT) {
+
+  beta <- c(-3.15, 0.0013, 0.386, -0.033)
+
+  score_s1 <- beta[1] + beta[2] * Q.cms
+  score_s2 <- beta[1] + beta[3] * aveT
+  score_s3 <- beta[1] + beta[4] * pctdiv
+
+  s <- (inv.logit(score_s1) + inv.logit(score_s2) + inv.logit(score_s3)) * 0.333
+  m <- (inv.logit(score_s1 + 0.48) + inv.logit(score_s2 + 0.48) + inv.logit(score_s3 + 0.48)) * 0.333
+  l <- (inv.logit(score_s1 + 1.223) + inv.logit(score_s2 + 1.223) + inv.logit(score_s3 + 1.223)) * 0.333
+
+  return(cbind(s,m,l,l))
+}
