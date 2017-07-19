@@ -12,7 +12,7 @@ tagList(
              ),
              spawningUI('one')),
     navbarMenu('Rearing Survival',
-               tabPanel('Calculator', icon = icon('calculator'),
+               tabPanel('Watersheds Calculator', icon = icon('calculator'),
                         fluidRow(
                           watershedUI('one'),
                           column(width = 10,
@@ -25,6 +25,8 @@ tagList(
                                         style = 'padding-left:10px;')  
                           )),
                         rearing_survivalUI('one')),
+               tabPanel('Delta Calculator', icon = icon('calculator'),
+                        delta_rearingUI('two')),
                tabPanel('Contact Points Map', icon = icon('globe'),
                         contactUI('one'))),
     tabPanel('Sources', sourcesUI('one'))
