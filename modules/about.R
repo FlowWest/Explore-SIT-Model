@@ -4,7 +4,7 @@ aboutUI <- function(id) {
   tagList(
     fluidRow(
       column(width = 12, style = 'padding-left: 30px;',
-             tags$h1('Fall Chinook Science Interation Team Model'),
+             tags$h1('Fall Chinook Science Integration Team Model'),
              tags$br(),
              tags$img(src = 'model.png', width = '80%'),
              tags$br(),

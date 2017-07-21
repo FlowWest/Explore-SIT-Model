@@ -49,7 +49,7 @@ limit_anadromy <- rgdal::readOGR('data/Main_Rivers.shp', stringsAsFactors = FALS
   spTransform(CRS("+proj=longlat +datum=WGS84 +no_defs"))
 
 #delta inputs
-delta_inflow <- read_rds('data/delta_inflow.rds')
+# delta_inflow <- read_rds('data/delta_inflow.rds')
 delta_inputs <- read_rds('data/delta_inputs.rds')
 delta_prop_div <- read_rds('data/delta_prop_div.rds')
 delta_total_div <- read_rds('data/delta_tot_div.rds')
