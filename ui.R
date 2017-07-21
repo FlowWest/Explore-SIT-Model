@@ -1,7 +1,7 @@
 tagList(
   shinyjs::useShinyjs(),
   navbarPage(
-    title = 'SIT Model Explorer (beta)',
+    title = 'SIT Model Explorer',
     windowTitle = 'SIT Model Explorer',
     theme = shinytheme('readable'),
     header= includeCSS('styles.css'),
