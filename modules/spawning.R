@@ -10,7 +10,7 @@ spawningUI <- function(id) {
                              and hatchery strays, less a proportional harvest. 
                              The adult harvest and hatchery allocation are based on 2010-2012 coded wire tag studies.
                              Each female is assumed to carry 5522 eggs,
-                             and each redd is assumed to require 12.4 square meters of suitable spawning habitat. 
+                             and each redd is assumed to require 12.4 square meters of suitable spawning habitat, this number includes defense space. 
                              The model also assumes a 50/50 sex ratio.
                              Each watershed has an estimated loss of eggs due to scour that results from fluctuating river flows.'),
                       tags$h5('To explore this relation further, visit the', 

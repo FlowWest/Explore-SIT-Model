@@ -50,7 +50,13 @@ delta_rearingUI <- function(id) {
              ),
              tags$div(
                tags$h4('Large', style = 'width:100px;'),
-               textOutput(ns('surv_lg'))))
+               textOutput(ns('surv_lg'))),
+             tags$br(),
+             tags$h5('Size Class Ranges:', style = 'font-weight: initial;'),
+             tags$h6('small (37.5 - 42 mm)', style = 'font-weight: initial;'), 
+             tags$h6('medium (42 - 74 mm)', style = 'font-weight: initial;'), 
+             tags$h6('large (74 - 110 mm)', style = 'font-weight: initial;')
+             )
     )
   )
 }
@@ -118,7 +124,7 @@ delta_rearing <- function(input, output, session) {
   
   output$div <- renderPlotly({
     delta_total_div %>% 
-      dplyr::filter(watershed == input$delta, tot_div > 0) %>% 
+      dplyr::filter(watershed == input$delta, month < 9) %>% 
       plot_ly(x = ~fct_inorder(month.name[month]), y = ~tot_div, type = 'scatter', mode = 'markers',
               text = ~paste0('<b>Year </b>', year, "<br>", pretty_num(tot_div), ' cfs'), hoverinfo = 'text',
               marker = list(color = 'rgba(54,144,192,.7)')) %>% 
@@ -131,7 +137,7 @@ delta_rearing <- function(input, output, session) {
   
   output$p_div <- renderPlotly({
     delta_prop_div %>% 
-      dplyr::filter(watershed == input$delta, prop_div > 0) %>% 
+      dplyr::filter(watershed == input$delta, month < 9) %>% 
       plot_ly(x = ~fct_inorder(month.name[month]), y = ~prop_div, type = 'scatter', mode = 'markers',
               text = ~paste0('<b>Year </b>', year, "<br>", pretty_num(prop_div), ' cfs'), hoverinfo = 'text',
               marker = list(color = 'rgba(54,144,192,.7)')) %>% 
@@ -144,7 +150,7 @@ delta_rearing <- function(input, output, session) {
   
   output$temp_graph <- renderPlotly({
     delta_temperature %>% 
-      dplyr::filter(watershed == input$delta) %>% 
+      dplyr::filter(watershed == input$delta, month < 9) %>% 
       plot_ly(x = ~fct_inorder(month.name[month]), y = ~temperature, type = 'bar',
               hoverinfo = 'text', text = ~temperature) %>% 
       layout(xaxis = list(title = 'month'), 

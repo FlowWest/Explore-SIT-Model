@@ -24,7 +24,9 @@ pretty_num <- function(num, places = 2) {
   format(round(num, places), big.mark = ',', drop = FALSE)
 }
 
-misc_inputs <- readr::read_rds('data/misc.rds')
+misc_inputs <- readr::read_rds('data/misc.rds') %>% 
+  mutate(init.adult = ifelse(Watershed == 'San Joaquin River', 0, init.adult), #adjust to reflect no spawning
+         P.scour.nst = ifelse(init.adult == 0, 0,  P.scour.nst))
 
 #CVPIAdata::monthly_reach_data, contains diversion and temperature data
 monthly <- readr::read_rds('data/monthly.rds')

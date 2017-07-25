@@ -47,7 +47,12 @@ rearing_survivalUI <- function(id) {
              tags$div(
                tags$h4('Large', style = 'width:100px;'),
                textOutput(ns('surv_lg'))
-             ))
+             ),
+             tags$br(),
+             tags$h5('Size Class Ranges:', style = 'font-weight: initial;'),
+             tags$h6('small (37.5 - 42 mm)', style = 'font-weight: initial;'), 
+             tags$h6('medium (42 - 74 mm)', style = 'font-weight: initial;'), 
+             tags$h6('large (74 - 110 mm)', style = 'font-weight: initial;'))
     )
   )
   
